@@ -1,20 +1,32 @@
 #!/usr/bin/env python3
+"""
+0-async_generator.py - Defines async_generator coroutine.
+
+This module contains a coroutine that generates random numbers asynchronously.
+"""
 
 import asyncio
-from typing import List
+import random
+from typing import Generator
 
-async_generator = __import__('0-async_generator').async_generator
-
-async def print_yielded_values() -> None:
+async def async_generator() -> Generator[float, None, None]:
     """
-    Collects and prints values yielded by async_generator.
-    """
-    result: List[float] = []
-    async for i in async_generator():
-        result.append(i)
-    print(result)
+    async_generator - Asynchronous generator coroutine.
 
-# Run the event loop manually
+    This coroutine loops 10 times, each time asynchronously waits 1 second,
+    then yields a random number between 0 and 10.
+
+    Yields:
+        float: A random number between 0 and 10.
+    """
+    for _ in range(10):
+        await asyncio.sleep(1)
+        yield random.uniform(0, 10)
+
+# Example usage
+async def main():
+    async for num in async_generator():
+        print(num)
+
 if __name__ == "__main__":
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(print_yielded_values())
+    asyncio.run(main())
