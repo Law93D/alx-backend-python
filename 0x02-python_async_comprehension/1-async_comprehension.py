@@ -20,11 +20,3 @@ async def async_comprehension() -> List[float]:
         List[float]: A list of 10 random numbers.
     """
     return [i async for i in async_generator()]
-
-# Example usage
-async def main():
-    print(await async_comprehension())
-
-if __name__ == "__main__":
-    import asyncio
-    asyncio.run(main())
