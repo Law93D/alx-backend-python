@@ -4,7 +4,7 @@ from parameterized import parameterized
 import unittest
 from utils import access_nested_map
 from utils import get_json
-from utils import memorize
+from utils import memoize
 from unittest.mock import patch, Mock
 
 
@@ -60,8 +60,9 @@ class TestMemoize(unittest.TestCase):
             def a_property(self):
                 return self.a_method()
 
-        with (patch.object(TestClass, 'a_method', return_value=42)
-                as mock_method):
+        with patch.object(
+            TestClass, 'a_method', return_value=42
+        ) as mock_method:
             test_instance = TestClass()
             # Call a_property twice and check the result
             self.assertEqual(test_instance.a_property, 42)
