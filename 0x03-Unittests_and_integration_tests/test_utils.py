@@ -4,6 +4,7 @@ from parameterized import parameterized
 import unittest
 from utils import access_nested_map
 from utils import get_json
+from utils import memorize
 from unittest.mock import patch, Mock
 
 
