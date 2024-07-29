@@ -83,5 +83,41 @@ class TestGithubOrgClient(unittest.TestCase):
         self.assertEqual(result, expected)
 
 
+@parameterized_class([
+    {
+        "org_payload": org_payload,
+        "repos_payload": repos_payload,
+        "expected_repos": expected_repos,
+        "apache2_repos": apache2_repos,
+    }
+])
+class TestIntegrationGithubOrgClient(unittest.TestCase):
+    """Integration test for GithubOrgClient.public_repos"""
+
+    @classmethod
+    def setUpClass(cls):
+        """Set up class for integration tests"""
+        cls.get_patcher = patch('requests.get', side_effect=cls.get_patched)
+        cls.get_patcher.start()
+
+    @classmethod
+    def tearDownClass(cls):
+        """Tear down class for integration tests"""
+        cls.get_patcher.stop()
+
+    @staticmethod
+    def get_patched(url):
+        """Patch method to return the appropriate fixture"""
+        if "orgs" in url:
+            return MockResponse(TestIntegrationGithubOrgClient.org_payload)
+        if "repos" in url:
+            return MockResponse(TestIntegrationGithubOrgClient.repos_payload)
+
+    def test_public_repos(self):
+        """Test GithubOrgClient.public_repos"""
+        client = GithubOrgClient("org_name")
+        self.assertEqual(client.public_repos(), self.expected_repos)
+
+
 if __name__ == "__main__":
     unittest.main()
