@@ -57,22 +57,30 @@ class TestGithubOrgClient(unittest.TestCase):
         'client.GithubOrgClient._public_repos_url',
         new_callable=PropertyMock
     )
-    def test_public_repos(self, mock_public_repos_url, mock_get_json):
+    def test_public_repos(
+        self, mock_public_repos_url, mock_get_json
+    ):
         # Set up the mocked URL
         mock_public_repos_url.return_value = (
             "https://api.github.com/orgs/google/repos"
         )
 
-        # Create an instance of GithubOrgClient
         client = GithubOrgClient("google")
         result = client.public_repos()
         self.assertEqual(result, ["repo1", "repo2"])
-
-        # Assert that the mocked property and get_json were called once
         mock_public_repos_url.assert_called_once()
         mock_get_json.assert_called_once_with(
                 ("https://api.github.com/orgs/google/repos")
             )
+
+    @parameterized.expand([
+        ({"license": {"key": "my_license"}}, "my_license", True),
+        ({"license": {"key": "other_license"}}, "my_license", False)
+    ])
+    def test_has_license(self, repo, license_key, expected):
+        client = GithubOrgClient("google")
+        result = client.has_license(repo, license_key)
+        self.assertEqual(result, expected)
 
 
 if __name__ == "__main__":
