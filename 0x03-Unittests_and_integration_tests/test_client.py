@@ -33,6 +33,7 @@ class TestGithubOrgClient(unittest.TestCase):
             'client.GithubOrgClient._public_repos_url',
             new_callable=PropertyMock
         )
+
     def test_public_repos(self, mock_public_repos_url, mock_get_json):
 
         mock_public_repos_url.return_value = "http://some_url.com/repos"
