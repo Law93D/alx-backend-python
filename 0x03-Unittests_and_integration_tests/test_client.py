@@ -38,9 +38,10 @@ class TestGithubOrgClient(unittest.TestCase):
         mock_public_repos_url.return_value = "http://some_url.com/repos"
         mock_get_json.return_value = [{"name": "repo1"}, {"name": "repo2"}]
         client = GithubOrgClient("org_name")
-        self.assertEqual(client.public_repos(), ["repo1", "repo2"])
-        mock_public_repos_url.assert_called_once()
-        mock_get_json.assert_called_once_with("http://some_url.com/repos")
+        with patch.object(client, '_public_repos_url', mock_public_repos_url):
+            self.assertEqual(client.public_repos(), ["repo1", "repo2"])
+            mock_public_repos_url.assert_called_once()
+            mock_get_json.assert_called_once_with("http://some_url.com/repos")
 
     @parameterized.expand([
         ({"license": {"key": "my_license"}}, "my_license", True),
